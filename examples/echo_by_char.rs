@@ -128,21 +128,25 @@ fn main() -> ! {
 
     hprintln!("test write to console ...");
 
-    tx1.write(b"\r\nconsole connect check.\r\n").ok();
+    tx1.write(b"\r\nconsole connect check.\r\n").ok(); // need next disambiguate syntac for stm32f4xx_hal
+    //embedded_io::Write::write(&mut tx1, b"\r\nconsole connect check.\r\n").ok();
 
     hprintln!("test read and write by char. Please type into the console ...");
 
     tx1.write(b"test read and write by char. Please type into the console ...").ok();
+    //embedded_io::Write::write(&mut tx1, b"test read and write by char. Please type into the console ...").ok();
 
     let mut buffer: [u8; 5] = [0; 5];  // could be length 1 for a byte
 
     loop {
         // Read a byte and write
         let _len = rx1.read(&mut buffer);
+        // let _len = embedded_io::Read::read(&mut rx1, &mut buffer).ok();
 
         //hprintln!("received");    // for debugging
 
         tx1.write(&buffer).ok();
+        //embedded_io::Write::write(&mut tx1, &buffer).ok();
 
         hprintln!("{:?}", &buffer); // for debugging
     }
